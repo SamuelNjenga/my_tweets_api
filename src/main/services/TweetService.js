@@ -8,8 +8,23 @@ exports.updateTweet = async (data, root) => {
   return db.Tweet.update(data, root);
 };
 
-exports.getTweets = async () => {
-  return db.Tweet.findAll();
+exports.getPagination = (page, size) => {
+  const limit = size ? +size : 5;
+  const offset = page ? page * limit : 0;
+
+  return { limit, offset };
+};
+
+exports.getPagingData = (data, page, limit) => {
+  const { count: totalTweets, rows: tweets } = data;
+  const currentPage = page ? +page : 0;
+  const totalPages = Math.ceil(totalTweets / limit);
+
+  return { totalTweets, tweets, totalPages, currentPage };
+};
+
+exports.getTweets = async (data) => {
+  return db.Tweet.findAndCountAll(data);
 };
 
 exports.getTweet = async (data) => {

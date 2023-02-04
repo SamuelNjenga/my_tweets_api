@@ -27,9 +27,12 @@ exports.createTweet = async (req, res, next) => {
 };
 
 exports.getTweets = async (req, res, next) => {
+  const { page, size } = req.query;
+  const { limit, offset } = tweetService.getPagination(page, size);
   try {
-    const tweets = await tweetService.getTweets();
-    res.status(200).json(tweets);
+    const tweets = await tweetService.getTweets({limit, offset});
+    const updatedTweets = tweetService.getPagingData(tweets, page, limit);
+    res.status(200).json(updatedTweets);
   } catch (err) {
     res.json({
       message: err,
