@@ -41,6 +41,18 @@ exports.getTweets = async (req, res, next) => {
   }
 };
 
+exports.getAllTweets = async (req, res, next) => {
+  try {
+    const tweets = await tweetService.getAllTweets();
+    res.status(200).json(tweets);
+  } catch (err) {
+    res.json({
+      message: err,
+    });
+    next(err);
+  }
+};
+
 exports.updateTweet = async (req, res, next) => {
   const transaction = await sequelize.transaction();
   try {

@@ -27,6 +27,10 @@ exports.getTweets = async (data) => {
   return db.Tweet.findAndCountAll(data);
 };
 
+exports.getAllTweets = async () => {
+  return db.Tweet.findAll();
+};
+
 exports.getTweet = async (data) => {
   return db.Tweet.findByPk(data);
 };
