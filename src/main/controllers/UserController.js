@@ -39,6 +39,19 @@ exports.getUsers = async (req, res, next) => {
   }
 };
 
+exports.getUser = async (req, res, next) => {
+  try {
+    const userId = req.params.id;
+    const user = await userService.getUser(userId);
+    res.status(200).json(user);
+  } catch (err) {
+    res.json({
+      message: err,
+    });
+    next(err);
+  }
+};
+
 exports.updateUser = async (req, res, next) => {
   const transaction = await sequelize.transaction();
   try {

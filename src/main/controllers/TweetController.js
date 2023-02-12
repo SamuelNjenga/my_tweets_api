@@ -74,6 +74,7 @@ exports.getAllTweets = async (req, res, next) => {
     result: result,
     lastTweet: result.length ? result[result.length - 1].id : 0,
     hasMore: result.length >= limit ? true : false,
+    nextPage: 1
   });
 };
 
