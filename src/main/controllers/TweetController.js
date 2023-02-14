@@ -74,7 +74,43 @@ exports.getAllTweets = async (req, res, next) => {
     result: result,
     lastTweet: result.length ? result[result.length - 1].id : 0,
     hasMore: result.length >= limit ? true : false,
-    nextPage: 1
+    nextPage: 1,
+  });
+};
+
+exports.getInfiniteTweets = async (req, res, next) => {
+  const limit = req.query.limit ? +req.query.limit : 5;
+  const last_tweet = req.query.lastTweet ? +req.query.lastTweet : 0;
+  let result = [];
+  if (last_tweet < 1) {
+    try {
+      const tweets = await tweetService.getAllTweets({ limit: limit });
+      result = tweets;
+    } catch (err) {
+      res.json({
+        message: err,
+      });
+      next(err);
+    }
+  } else {
+    try {
+      const tweets = await tweetService.getAllTweets({
+        where: { id: { [Op.gt]: last_tweet } },
+        limit: limit,
+      });
+      result = tweets;
+    } catch (err) {
+      res.json({
+        message: err,
+      });
+      next(err);
+    }
+  }
+  res.json({
+    result: result,
+    lastTweet: result.length ? result[result.length - 1].id : 0,
+    hasMore: result.length >= limit ? true : false,
+    nextPage: 1,
   });
 };
 
